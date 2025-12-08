@@ -1,0 +1,73 @@
+name: Deploy to Windows Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build project
+        run: pnpm run build
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: .output
+
+  deploy:
+    needs: build
+    runs-on: windows-latest # This should ideally be a self-hosted runner on your server
+
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: ./.output
+
+      - name: Deploy to server
+        #
+        # === IMPORTANT ===
+        # This is a placeholder for your deployment script.
+        # You will need to replace this with your actual deployment logic.
+        #
+        # Common methods include:
+        # 1. FTP/SFTP: Use a GitHub Action to upload the '.output' folder to your server.
+        #    - Example Action: `SamKirkland/FTP-Deploy-Action`
+        # 2. SSH: Use SSH to connect to your server and pull the latest code or copy files.
+        #    - Example Action: `appleboy/ssh-action`
+        # 3. IIS Deploy: Use a PowerShell script to stop the site, copy new files, and restart the site.
+        #
+        # You will need to configure secrets in your GitHub repository (Settings > Secrets and variables > Actions)
+        # for things like server address, username, and password.
+        #
+        run: |
+          echo "Deploying to Windows Server..."
+          echo "You need to replace this step with your actual deployment script."
+          # Example using PowerShell to copy files (requires a self-hosted runner or appropriate setup)
+          # Copy-Item -Path ./.output -Destination \\YOUR_SERVER_IP\wwwroot\your-app -Recurse -Force
+          # Write-Host "Deployment complete."
+        env:
+          # Example of using secrets
+          # SERVER_USERNAME: ${secrets.SERVER_USERNAME}
+          # SERVER_PASSWORD: ${secrets.SERVER_PASSWORD}
+          TARGET_DIR: 'C:\inetpub\wwwroot\gmt-support'
