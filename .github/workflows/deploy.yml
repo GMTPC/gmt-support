@@ -34,12 +34,17 @@ jobs:
           Get-ChildItem -Path .\.output -Recurse | Select-Object FullName
           Write-Host "========================"
 
+      - name: Package build output
+        run: |
+          if (Test-Path -Path "output.zip") { Remove-Item -Path output.zip -Force }
+          Compress-Archive -Path .\.output\* -DestinationPath output.zip
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: |
-            .output/**
+            output.zip
             package.json
             pnpm-lock.yaml
           if-no-files-found: error
@@ -64,13 +69,16 @@ jobs:
 
       - name: Copy build files to server
         run: |
-          Copy-Item -Path .\artifacts\.output -Destination C:\inetpub\wwwroot\gmt-support\ -Recurse -Force
+          if (!(Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support")) { New-Item -ItemType Directory -Path "C:\\inetpub\\wwwroot\\gmt-support" | Out-Null }
+          if (Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support\\.output") { Remove-Item -Path "C:\\inetpub\\wwwroot\\gmt-support\\.output" -Recurse -Force }
+          Expand-Archive -Path .\artifacts\output.zip -DestinationPath C:\inetpub\wwwroot\gmt-support\.output -Force
           Copy-Item -Path .\artifacts\package.json -Destination C:\inetpub\wwwroot\gmt-support\ -Force
           Copy-Item -Path .\artifacts\pnpm-lock.yaml -Destination C:\inetpub\wwwroot\gmt-support\ -Force
 
       - name: Install dependencies on server
         run: |
           cd C:\inetpub\wwwroot\gmt-support
+          npm install -g pnpm
           pnpm install --prod
 
       - name: Deployment complete
