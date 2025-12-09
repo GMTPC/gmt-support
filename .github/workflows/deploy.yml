@@ -52,7 +52,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: self-hosted # This MUST be a self-hosted runner on your Windows Server
+    runs-on: self-hosted # self-hosted runner ที่อยู่บน Windows Server ของคุณ
 
     steps:
       - name: Download build artifacts
@@ -69,28 +69,52 @@ jobs:
 
       - name: Copy build files to server
         run: |
-          # Ensure destination exists and grant permissions to runner account
-          if (!(Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support")) { New-Item -ItemType Directory -Path "C:\\inetpub\\wwwroot\\gmt-support" | Out-Null }
-          # Take ownership and grant Modify to NetworkService (default Actions runner service account)
-          takeown /F "C:\\inetpub\\wwwroot\\gmt-support" /R /D Y
-            icacls "C:\\inetpub\\wwwroot\\gmt-support" /grant 'NT AUTHORITY\\NETWORK SERVICE:(OI)(CI)M' /T
-          icacls "C:\\inetpub\\wwwroot\\gmt-support" /inheritance:e
-          # Stop IIS to release file locks (optional but safer during deploy)
+          Write-Host "Runner user: $env:USERNAME"
+
+          $siteRoot = "C:\inetpub\wwwroot\gmt-support"
+          $outputDir = "$siteRoot\.output"
+
+          # Ensure destination folder exists
+          if (!(Test-Path $siteRoot)) {
+              New-Item -ItemType Directory -Path $siteRoot | Out-Null
+          }
+
+          # Stop IIS to release all file locks
           iisreset /stop
-          if (!(Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support")) { New-Item -ItemType Directory -Path "C:\\inetpub\\wwwroot\\gmt-support" | Out-Null }
-          $dest = "C:\\inetpub\\wwwroot\\gmt-support\\.output"
-          $tempRoot = "$env:TEMP"
-          $temp = Join-Path $tempRoot "gmt-support-output-tmp"
-          if (Test-Path -Path $temp) { Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue }
+
+          # Take ownership (NETWORK SERVICE cannot be owner)
+          takeown /F $siteRoot /R /D Y | Out-Null
+          icacls $siteRoot /setowner "Administrators" /T | Out-Null
+
+          # Grant full permissions to NETWORK SERVICE (runner)
+          icacls $siteRoot /grant "NT AUTHORITY\NETWORK SERVICE:(OI)(CI)F" /T | Out-Null
+
+          # Remove old .output
+          if (Test-Path $outputDir) {
+              Remove-Item $outputDir -Recurse -Force -ErrorAction SilentlyContinue
+          }
+
+          # Prepare temp extraction folder
+          $temp = "$env:TEMP\gmt-output-tmp"
+          if (Test-Path $temp) { Remove-Item $temp -Recurse -Force }
           Expand-Archive -Path .\artifacts\output.zip -DestinationPath $temp -Force
-          if (!(Test-Path -Path $dest)) { New-Item -ItemType Directory -Path $dest | Out-Null }
-          # Copy using robocopy to handle permissions and long paths
-          robocopy "$temp" "$dest" * /E /R:1 /W:1 /XO /COPY:DAT
-          # Clean up temp
-          Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
-          Copy-Item -Path .\artifacts\package.json -Destination C:\inetpub\wwwroot\gmt-support\ -Force
-          Copy-Item -Path .\artifacts\pnpm-lock.yaml -Destination C:\inetpub\wwwroot\gmt-support\ -Force
-          # Start IIS after deployment
+
+          # Ensure output directory exists
+          if (!(Test-Path $outputDir)) {
+              New-Item -ItemType Directory -Path $outputDir | Out-Null
+          }
+
+          # Copy build using robocopy
+          robocopy $temp $outputDir * /E /COPYALL /R:2 /W:1
+
+          # Cleanup temp
+          Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue
+
+          # Copy package.json / pnpm-lock.yaml
+          Copy-Item .\artifacts\package.json   "$siteRoot" -Force
+          Copy-Item .\artifacts\pnpm-lock.yaml "$siteRoot" -Force
+
+          # Start IIS again
           iisreset /start
 
       - name: Install dependencies on server
