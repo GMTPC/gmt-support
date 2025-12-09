@@ -117,7 +117,7 @@ async function confirmDelete() {
             <div>รายการแจ้งซ่อม</div>
             <div>
               <NuxtLink to="/it-service-request/create">
-                <VBtn color="primary" class="me-2">แจ้งซ่อมใหม่ IT</VBtn>
+                <VBtn color="primary" class="me-2">แจ้งซ่อมใหม่ IT New Request +</VBtn>
               </NuxtLink>
             </div>
           </VCardTitle>
