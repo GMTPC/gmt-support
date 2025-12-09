@@ -91,6 +91,11 @@ jobs:
 
           # Copy build using robocopy without admin-only flags
           robocopy $temp $outputDir * /E /R:2 /W:1 /XO /COPY:DAT
+          if ($LASTEXITCODE -le 7) {
+            Write-Host "Robocopy completed with acceptable code: $LASTEXITCODE"
+          } else {
+            Write-Error "Robocopy failed with code: $LASTEXITCODE"; exit $LASTEXITCODE
+          }
 
           # Cleanup temp
           Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue
