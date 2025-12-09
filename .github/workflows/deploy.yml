@@ -47,6 +47,12 @@ jobs:
           name: build-output
           path: ./artifacts
 
+      - name: Debug - List downloaded files
+        run: |
+          Write-Host "=== Listing artifacts folder ==="
+          Get-ChildItem -Path .\artifacts -Recurse | Select-Object FullName
+          Write-Host "================================"
+
       - name: Copy build files to server
         run: |
           Copy-Item -Path .\artifacts\.output -Destination C:\inetpub\wwwroot\gmt-support\ -Recurse -Force
