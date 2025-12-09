@@ -73,7 +73,7 @@ jobs:
           if (!(Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support")) { New-Item -ItemType Directory -Path "C:\\inetpub\\wwwroot\\gmt-support" | Out-Null }
           # Take ownership and grant Modify to NetworkService (default Actions runner service account)
           takeown /F "C:\\inetpub\\wwwroot\\gmt-support" /R /D Y
-          icacls "C:\\inetpub\\wwwroot\\gmt-support" /grant "NT AUTHORITY\\NetworkService":(OI)(CI)M /T
+            icacls "C:\\inetpub\\wwwroot\\gmt-support" /grant 'NT AUTHORITY\\NETWORK SERVICE:(OI)(CI)M' /T
           icacls "C:\\inetpub\\wwwroot\\gmt-support" /inheritance:e
           # Stop IIS to release file locks (optional but safer during deploy)
           iisreset /stop
