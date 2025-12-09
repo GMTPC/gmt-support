@@ -70,8 +70,17 @@ jobs:
       - name: Copy build files to server
         run: |
           if (!(Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support")) { New-Item -ItemType Directory -Path "C:\\inetpub\\wwwroot\\gmt-support" | Out-Null }
-          if (Test-Path -Path "C:\\inetpub\\wwwroot\\gmt-support\\.output") { Remove-Item -Path "C:\\inetpub\\wwwroot\\gmt-support\\.output" -Recurse -Force }
-          Expand-Archive -Path .\artifacts\output.zip -DestinationPath C:\inetpub\wwwroot\gmt-support\.output -Force
+          $dest = "C:\\inetpub\\wwwroot\\gmt-support\\.output"
+          $temp = "C:\\inetpub\\wwwroot\\gmt-support\\.output.tmp"
+          if (Test-Path -Path $temp) { Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue }
+          Expand-Archive -Path .\artifacts\output.zip -DestinationPath $temp -Force
+          if (!(Test-Path -Path $dest)) { New-Item -ItemType Directory -Path $dest | Out-Null }
+          # Remove read-only attribute on destination files to allow overwrite
+          Get-ChildItem -Path $dest -Recurse -ErrorAction SilentlyContinue | ForEach-Object { try { $_.Attributes = 'Archive' } catch {} }
+          # Copy new files over existing without deleting locked ones
+          Copy-Item -Path "$temp\*" -Destination $dest -Recurse -Force
+          # Optional: clean up temp folder
+          Remove-Item -Path $temp -Recurse -Force -ErrorAction SilentlyContinue
           Copy-Item -Path .\artifacts\package.json -Destination C:\inetpub\wwwroot\gmt-support\ -Force
           Copy-Item -Path .\artifacts\pnpm-lock.yaml -Destination C:\inetpub\wwwroot\gmt-support\ -Force
 
