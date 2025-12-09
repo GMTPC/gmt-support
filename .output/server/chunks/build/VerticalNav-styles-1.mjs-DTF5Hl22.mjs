@@ -1,0 +1,3 @@
+const VerticalNav_vue_vue_type_style_index_0_scoped_79a42c7b_lang = ".app-logo[data-v-79a42c7b]{align-items:center;-moz-column-gap:.75rem;column-gap:.75rem;display:flex}.app-logo .app-logo-title[data-v-79a42c7b]{font-size:1.25rem;font-weight:500;line-height:1.75rem;text-transform:uppercase}.nav-toggle[data-v-79a42c7b]{background:transparent;border:0;color:inherit;cursor:pointer;font-size:1rem;line-height:1;margin-inline-start:.5rem;padding:.25rem .5rem}.nav-toggle[data-v-79a42c7b]:focus{outline:2px solid rgba(0,0,0,.12);outline-offset:2px}";
+
+export { VerticalNav_vue_vue_type_style_index_0_scoped_79a42c7b_lang as V };

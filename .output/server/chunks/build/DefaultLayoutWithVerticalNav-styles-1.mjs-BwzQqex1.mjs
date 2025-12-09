@@ -1,0 +1,3 @@
+const DefaultLayoutWithVerticalNav_vue_vue_type_style_index_0_scoped_88e28da5_lang = ".meta-key[data-v-88e28da5]{block-size:1.5625rem;border:thin solid rgba(var(--v-border-color),var(--v-border-opacity));border-radius:6px;line-height:1.3125rem;padding-block:.125rem;padding-inline:.25rem}.app-logo[data-v-88e28da5]{align-items:center;-moz-column-gap:.75rem;column-gap:.75rem;display:flex}.app-logo .app-logo-title[data-v-88e28da5]{font-size:1.25rem;font-weight:500;line-height:1.75rem;text-transform:uppercase}";
+
+export { DefaultLayoutWithVerticalNav_vue_vue_type_style_index_0_scoped_88e28da5_lang as D };

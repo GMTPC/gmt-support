@@ -1,0 +1,1 @@
+import{_ as t,al as a,S as r,h as c,o}from"./BX3DXnrd.js";const s={__name:"create",setup(_){const e=a();return r(()=>{e.replace("/it-service-request")}),(n,p)=>(o(),c("div"))}},d=t(s,[["__scopeId","data-v-4b5dfac5"]]);export{d as default};

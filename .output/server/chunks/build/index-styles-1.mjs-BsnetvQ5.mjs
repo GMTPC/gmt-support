@@ -1,0 +1,3 @@
+const index_vue_vue_type_style_index_0_scoped_236c36f9_lang = ".page-wrapper[data-v-236c36f9]{margin:0 auto;max-width:1200px}.mb-3[data-v-236c36f9]{margin-bottom:1rem}.fw-600[data-v-236c36f9]{font-weight:600}.text-muted[data-v-236c36f9]{color:rgba(0,0,0,.6)}.card-form[data-v-236c36f9]{border-radius:10px;box-shadow:0 6px 18px rgba(15,23,42,.04);padding:1rem}.card-body[data-v-236c36f9]{padding-bottom:.75rem;padding-top:.5rem}.my-data-table .v-data-table__wrapper[data-v-236c36f9]{max-height:60vh}.my-data-table .v-data-table-header th[data-v-236c36f9]{font-weight:600}";
+
+export { index_vue_vue_type_style_index_0_scoped_236c36f9_lang as i };

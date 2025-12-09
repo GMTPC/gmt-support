@@ -43,6 +43,7 @@ jobs:
             package.json
             pnpm-lock.yaml
           if-no-files-found: error
+          include-hidden-files: true
 
   deploy:
     needs: build
