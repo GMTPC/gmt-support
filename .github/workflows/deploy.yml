@@ -76,36 +76,21 @@ jobs:
 
           # Ensure destination folder exists
           if (!(Test-Path $siteRoot)) {
-              New-Item -ItemType Directory -Path $siteRoot | Out-Null
+            New-Item -ItemType Directory -Path $siteRoot | Out-Null
           }
 
-          # Stop IIS to release all file locks
-          iisreset /stop
-
-          # Take ownership (NETWORK SERVICE cannot be owner)
-          takeown /F $siteRoot /R /D Y | Out-Null
-          icacls $siteRoot /setowner "Administrators" /T | Out-Null
-
-          # Grant full permissions to NETWORK SERVICE (runner)
-          icacls $siteRoot /grant "NT AUTHORITY\NETWORK SERVICE:(OI)(CI)F" /T | Out-Null
-
-          # Remove old .output
-          if (Test-Path $outputDir) {
-              Remove-Item $outputDir -Recurse -Force -ErrorAction SilentlyContinue
-          }
-
-          # Prepare temp extraction folder
+          # Prepare temp extraction folder (under runner's TEMP)
           $temp = "$env:TEMP\gmt-output-tmp"
-          if (Test-Path $temp) { Remove-Item $temp -Recurse -Force }
+          if (Test-Path $temp) { Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue }
           Expand-Archive -Path .\artifacts\output.zip -DestinationPath $temp -Force
 
           # Ensure output directory exists
           if (!(Test-Path $outputDir)) {
-              New-Item -ItemType Directory -Path $outputDir | Out-Null
+            New-Item -ItemType Directory -Path $outputDir | Out-Null
           }
 
-          # Copy build using robocopy
-          robocopy $temp $outputDir * /E /COPYALL /R:2 /W:1
+          # Copy build using robocopy without admin-only flags
+          robocopy $temp $outputDir * /E /R:2 /W:1 /XO /COPY:DAT
 
           # Cleanup temp
           Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue
@@ -113,9 +98,6 @@ jobs:
           # Copy package.json / pnpm-lock.yaml
           Copy-Item .\artifacts\package.json   "$siteRoot" -Force
           Copy-Item .\artifacts\pnpm-lock.yaml "$siteRoot" -Force
-
-          # Start IIS again
-          iisreset /start
 
       - name: Install dependencies on server
         run: |
