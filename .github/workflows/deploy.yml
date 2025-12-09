@@ -47,12 +47,6 @@ jobs:
           name: build-output
           path: ./
 
-      - name: Stop PM2 process
-        run: |
-          cd C:\inetpub\wwwroot\gmt-support
-          pm2 stop gmt-support
-        continue-on-error: true
-
       - name: Copy build files to server
         run: |
           Copy-Item -Path .\.output -Destination C:\inetpub\wwwroot\gmt-support\ -Recurse -Force
@@ -63,12 +57,6 @@ jobs:
         run: |
           cd C:\inetpub\wwwroot\gmt-support
           pnpm install --prod
-
-      - name: Restart PM2 process
-        run: |
-          cd C:\inetpub\wwwroot\gmt-support
-          pm2 restart gmt-support
-          pm2 save
 
       - name: Deployment complete
         run: Write-Host "✅ Deployment to Windows Server completed successfully!"
