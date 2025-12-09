@@ -27,14 +27,22 @@ jobs:
       - name: Build project
         run: pnpm run build
 
+      - name: Verify build output
+        run: |
+          if (!(Test-Path -Path ".\.output")) { Write-Error "Nuxt .output not found"; exit 1 }
+          Write-Host "=== Listing .output ==="
+          Get-ChildItem -Path .\.output -Recurse | Select-Object FullName
+          Write-Host "========================"
+
       - name: Archive production artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: |
-            .output
+            .output/**
             package.json
             pnpm-lock.yaml
+          if-no-files-found: error
 
   deploy:
     needs: build
