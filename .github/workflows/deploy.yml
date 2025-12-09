@@ -45,13 +45,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: build-output
-          path: ./
+          path: ./artifacts
 
       - name: Copy build files to server
         run: |
-          Copy-Item -Path .\.output -Destination C:\inetpub\wwwroot\gmt-support\ -Recurse -Force
-          Copy-Item -Path .\package.json -Destination C:\inetpub\wwwroot\gmt-support\ -Force
-          Copy-Item -Path .\pnpm-lock.yaml -Destination C:\inetpub\wwwroot\gmt-support\ -Force
+          Copy-Item -Path .\artifacts\.output -Destination C:\inetpub\wwwroot\gmt-support\ -Recurse -Force
+          Copy-Item -Path .\artifacts\package.json -Destination C:\inetpub\wwwroot\gmt-support\ -Force
+          Copy-Item -Path .\artifacts\pnpm-lock.yaml -Destination C:\inetpub\wwwroot\gmt-support\ -Force
 
       - name: Install dependencies on server
         run: |
