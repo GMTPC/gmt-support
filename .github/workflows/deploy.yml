@@ -109,7 +109,7 @@ jobs:
         run: |
           cd C:\inetpub\wwwroot\gmt-support
           npm install -g pnpm
-          pnpm install --prod
+          npx pnpm install --prod
 
       - name: Deployment complete
         run: Write-Host "✅ Deployment to Windows Server completed successfully!"
