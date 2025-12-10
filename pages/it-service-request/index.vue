@@ -1,9 +1,9 @@
 <script setup>
-import { useHead } from '#imports';
-import useFixAssets from '@/composables/useFixAssets';
-import { useFixAssetsStore } from '@/stores/fixAssets';
-import { getStatusGroup, getStatusLabel, ticketStatuses } from '@/utils/ticketStatuses';
-import { computed, ref, unref } from 'vue';
+import { useHead } from '#imports'
+import useFixAssets from '@/composables/useFixAssets'
+import { useFixAssetsStore } from '@/stores/fixAssets'
+import { getStatusGroup, getStatusLabel, ticketStatuses } from '@/utils/ticketStatuses'
+import { computed, ref, unref } from 'vue'
 
 useHead({ title: 'รายการแจ้งซ่อม - GMT SUPPORT' })
 
@@ -24,10 +24,12 @@ const statusOptions = [{ code: 'All', label: 'ทั้งหมด' }, ...ticke
 const filteredTickets = computed(() => {
   const list = unref(tickets) || []
   const s = search.value.trim().toLowerCase()
+
   return list.filter(t => {
     const matchesSearch = !s || [t.title, t.description, t.priority].filter(Boolean).join(' ').toLowerCase().includes(s)
     const matchesPriority = priorityFilter.value === 'All' || t.priority === priorityFilter.value
     const matchesStatus = statusFilter.value === 'All' || t.status === statusFilter.value
+
     return matchesSearch && matchesPriority && matchesStatus
   })
 })
@@ -61,6 +63,7 @@ function chipForPriority(p) {
 
 function chipForStatus(code) {
   const group = getStatusGroup(code) || 'requester'
+
   return statusMap[group] || { color: 'secondary', textColor: 'white' }
 }
 
@@ -76,6 +79,7 @@ function pad(n) {
 function formatIsoDate(iso) {
   if (!iso) return ''
   const d = new Date(iso)
+
   return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`
 }
 
@@ -109,7 +113,7 @@ async function confirmDelete() {
   <div class="pa-4">
     <VRow>
       <VCol cols="12">
-        <Breadcrumbs :showHome="true" :items="[{ text: 'แจ้งซ่อม', to: '/it-service-request' }]" />
+        <Breadcrumbs :show-home="true" :items="[{ text: 'แจ้งซ่อม', to: '/it-service-request' }]" />
 
         <VCard class="card-form">
           <VProgressLinear v-if="!loaded" indeterminate color="primary" height="4" class="mb-3" />
@@ -117,7 +121,9 @@ async function confirmDelete() {
             <div>รายการแจ้งซ่อม</div>
             <div>
               <NuxtLink to="/it-service-request/create">
-                <VBtn color="primary" class="me-2">แจ้งซ่อมใหม่ IT New Request +</VBtn>
+                <VBtn color="primary" class="me-2">
+                  แจ้งซ่อมใหม่ +
+                </VBtn>
               </NuxtLink>
             </div>
           </VCardTitle>
@@ -139,7 +145,9 @@ async function confirmDelete() {
               </VCol>
 
               <VCol cols="12" md="2" class="text-end">
-                <VBtn variant="tonal" @click="search = ''; priorityFilter = 'All'; statusFilter = 'All'">รีเซ็ต</VBtn>
+                <VBtn variant="tonal" @click="search = ''; priorityFilter = 'All'; statusFilter = 'All'">
+                  รีเซ็ต
+                </VBtn>
               </VCol>
             </VRow>
 
@@ -150,17 +158,25 @@ async function confirmDelete() {
               sticky>
               <template #item.title="{ item }">
                 <div>
-                  <div class="fw-600">{{ item.title }}</div>
-                  <div class="text-muted small">{{ item.description }}</div>
+                  <div class="fw-600">
+                    {{ item.title }}
+                  </div>
+                  <div class="text-muted small">
+                    {{ item.description }}
+                  </div>
                 </div>
               </template>
 
               <template #item.index="{ item }">
-                <div class="text-center">{{filteredTickets.findIndex(i => i.id === item.id) + 1}}</div>
+                <div class="text-center">
+                  {{filteredTickets.findIndex(i => i.id === item.id) + 1}}
+                </div>
               </template>
 
               <template #item.createdAt="{ item }">
-                <div class="text-center small">{{ formatIsoDate(item.createdAt) }}</div>
+                <div class="text-center small">
+                  {{ formatIsoDate(item.createdAt) }}
+                </div>
               </template>
 
               <template #item.status="{ item }">
@@ -183,9 +199,12 @@ async function confirmDelete() {
 
               <template #item.actions="{ item }">
                 <NuxtLink :to="`/it-service-request/update/${item.id}`">
-                  <VBtn variant="outlined" size="small" class="me-2">แก้ไข</VBtn>
+                  <VBtn variant="outlined" size="small" class="me-2">
+                    แก้ไข
+                  </VBtn>
                 </NuxtLink>
-                <VBtn color="error" variant="text" size="small" @click.prevent="openDelete(item)">ลบ
+                <VBtn color="error" variant="text" size="small" @click.prevent="openDelete(item)">
+                  ลบ
                 </VBtn>
               </template>
             </VDataTable>
@@ -193,11 +212,17 @@ async function confirmDelete() {
             <VDialog v-model="deleteDialog" max-width="480">
               <VCard>
                 <VCardTitle>ยืนยันการลบ</VCardTitle>
-                <VCardText>คุณแน่ใจว่าจะลบคำขอนี้: <strong>{{ toDelete ? toDelete.title : '' }}</strong>
-                  ?</VCardText>
+                <VCardText>
+                  คุณแน่ใจว่าจะลบคำขอนี้: <strong>{{ toDelete ? toDelete.title : '' }}</strong>
+                  ?
+                </VCardText>
                 <VCardActions class="justify-end">
-                  <VBtn variant="text" @click="deleteDialog = false; toDelete = null">ยกเลิก</VBtn>
-                  <VBtn color="error" :loading="deleting" @click="confirmDelete">ลบ</VBtn>
+                  <VBtn variant="text" @click="deleteDialog = false; toDelete = null">
+                    ยกเลิก
+                  </VBtn>
+                  <VBtn color="error" :loading="deleting" @click="confirmDelete">
+                    ลบ
+                  </VBtn>
                 </VCardActions>
               </VCard>
             </VDialog>
@@ -210,12 +235,13 @@ async function confirmDelete() {
 
 <style scoped>
 .page-wrapper {
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-block: 0;
+  margin-inline: auto;
+  max-inline-size: 1200px;
 }
 
 .mb-3 {
-  margin-bottom: 1rem
+  margin-block-end: 1rem;
 }
 
 .fw-600 {
@@ -223,23 +249,22 @@ async function confirmDelete() {
 }
 
 .text-muted {
-  color: rgba(0, 0, 0, 0.6);
+  color: rgba(0, 0, 0, 60%);
 }
 
 /* card form styles match create/update */
 .card-form {
   padding: 1rem;
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 4%);
 }
 
 .card-body {
-  padding-top: 0.5rem;
-  padding-bottom: 0.75rem;
+  padding-block: 0.5rem 0.75rem;
 }
 
 .my-data-table .v-data-table__wrapper {
-  max-height: 60vh;
+  max-block-size: 60vh;
 }
 
 .my-data-table .v-data-table-header th {

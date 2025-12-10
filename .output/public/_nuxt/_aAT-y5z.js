@@ -1,1 +1,0 @@
-import{_ as t,al as o,S as s,h as r,o as a}from"./BX3DXnrd.js";const _={__name:"[id]",setup(c){const e=o();return s(()=>{e.replace("/it-service-request")}),(n,p)=>(a(),r("div"))}},d=t(_,[["__scopeId","data-v-12852ff2"]]);export{d as default};

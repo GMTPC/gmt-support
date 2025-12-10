@@ -1,1 +1,0 @@
-import{_ as e,o as t,h as o,bb as s}from"./BX3DXnrd.js";const r={},c={class:"layout-wrapper layout-blank","data-allow-mismatch":""};function l(a,n){return t(),o("div",c,[s(a.$slots,"default")])}const d=e(r,[["render",l]]);export{d as default};

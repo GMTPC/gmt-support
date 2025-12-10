@@ -1,1 +1,0 @@
-import{_ as t,o as s,h as a,bb as c}from"./BX3DXnrd.js";const n={},o={class:"layout-auth d-flex align-center justify-center h-screen"};function r(e,d){return s(),a("div",o,[c(e.$slots,"default",{},void 0,!0)])}const l=t(n,[["render",r],["__scopeId","data-v-73c6a62e"]]);export{l as default};

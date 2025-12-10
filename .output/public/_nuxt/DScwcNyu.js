@@ -1,1 +1,0 @@
-import{p as t,D as u,A as c,X as r,aR as d}from"./BX3DXnrd.js";const l=t({eager:Boolean},"lazy");function p(o,e){const a=u(!1),s=c(()=>a.value||o.eager||e.value);r(e,()=>a.value=!0);function n(){o.eager||(a.value=!1)}return{isBooted:a,hasContent:s,onAfterLeave:n}}function m(){const e=d("useScopeId").vnode.scopeId;return{scopeId:e?{[e]:""}:void 0}}export{m as a,l as m,p as u};

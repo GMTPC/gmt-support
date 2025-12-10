@@ -1,1 +1,0 @@
-import{_ as t,al as r,S as o,h as s,o as c}from"./BX3DXnrd.js";const a={__name:"report-ticket",setup(_){const e=r();return o(()=>{e.replace("/it-service-request")}),(n,p)=>(c(),s("div"))}},i=t(a,[["__scopeId","data-v-00655b4f"]]);export{i as default};
