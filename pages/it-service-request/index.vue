@@ -118,11 +118,11 @@ async function confirmDelete() {
         <VCard class="card-form">
           <VProgressLinear v-if="!loaded" indeterminate color="primary" height="4" class="mb-3" />
           <VCardTitle class="d-flex align-center justify-space-between">
-            <div>รายการแจ้งซ่อม</div>
+            <div>รายการแจ้งซ่อม +</div>
             <div>
               <NuxtLink to="/it-service-request/create">
                 <VBtn color="primary" class="me-2">
-                  แจ้งซ่อมใหม่ +
+                  แจ้งซ่อมใหม่ + NEW IT SERVICE REQUEST
                 </VBtn>
               </NuxtLink>
             </div>

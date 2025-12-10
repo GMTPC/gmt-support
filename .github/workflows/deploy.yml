@@ -101,5 +101,9 @@ jobs:
           # Cleanup temp
           Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue
 
+      - name: Restart PM2
+        run: |
+          pm2 restart gmt-support
+
       - name: Deployment complete
         run: Write-Host "✅ Deployment to Windows Server completed successfully!"
