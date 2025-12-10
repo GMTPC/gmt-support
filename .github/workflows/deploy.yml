@@ -101,15 +101,5 @@ jobs:
           # Cleanup temp
           Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue
 
-          # Copy package.json / pnpm-lock.yaml
-          Copy-Item .\artifacts\package.json   "$siteRoot" -Force
-          Copy-Item .\artifacts\pnpm-lock.yaml "$siteRoot" -Force
-
-      - name: Install dependencies on server
-        run: |
-          cd C:\inetpub\wwwroot\gmt-support
-          npm install -g pnpm
-          npx pnpm install --prod
-
       - name: Deployment complete
         run: Write-Host "✅ Deployment to Windows Server completed successfully!"
