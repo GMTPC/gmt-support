@@ -103,7 +103,16 @@ jobs:
 
       - name: Restart PM2
         run: |
-          pm2 restart gmt-support
+          # Try to add common npm locations to PATH
+          $env:Path += ";$env:APPDATA\npm;C:\Program Files\nodejs"
+          
+          if (Get-Command pm2 -ErrorAction SilentlyContinue) {
+            Write-Host "Found global pm2, restarting..."
+            pm2 restart gmt-support
+          } else {
+            Write-Host "pm2 not found in PATH, trying npx..."
+            npx pm2 restart gmt-support
+          }
 
       - name: Deployment complete
         run: Write-Host "✅ Deployment to Windows Server completed successfully!"
